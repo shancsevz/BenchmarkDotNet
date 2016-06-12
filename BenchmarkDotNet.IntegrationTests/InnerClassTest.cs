@@ -5,6 +5,7 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace BenchmarkDotNet.IntegrationTests
 {
@@ -13,10 +14,17 @@ namespace BenchmarkDotNet.IntegrationTests
     [Config(typeof(SingleRunFastConfig))]
     public class InnerClassTest
     {
+        private readonly ITestOutputHelper output;
+
+        public InnerClassTest(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         [Fact]
         public void Test()
         {
-            var logger = new AccumulationLogger();
+            var logger = new OutputLogger(output);
             var config = DefaultConfig.Instance.With(logger);
             BenchmarkTestExecutor.CanExecute<InnerClassTest>(config);
 
